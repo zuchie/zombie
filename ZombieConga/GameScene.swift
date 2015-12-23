@@ -208,28 +208,44 @@ class GameScene: SKScene {
         */
         enemy.position = catLady.position
         
-        let enemyOnRectSide = randomPoint.side
+        //let enemyOnRectSide = randomPoint.side
         var actionMove: SKAction
+        /*
         switch enemyOnRectSide {
         case 0: // left side
             catLady.zRotation = π
-            actionMove = SKAction.moveToX(CGRectGetMaxX(playableRect), duration: 2.0)
+            //actionMove = SKAction.moveToX(CGRectGetMaxX(playableRect), duration: 2.0)
         case 1: // top side
             catLady.zRotation = π / 2
-            actionMove = SKAction.moveToY(CGRectGetMinY(playableRect), duration: 2.0)
+            //actionMove = SKAction.moveToY(CGRectGetMinY(playableRect), duration: 2.0)
         case 3: // bottom side
             catLady.zRotation = -π / 2
-            actionMove = SKAction.moveToY(CGRectGetMaxY(playableRect), duration: 2.0)
+            //actionMove = SKAction.moveToY(CGRectGetMaxY(playableRect), duration: 2.0)
         default: // right side
-            actionMove = SKAction.moveToX(CGRectGetMinX(playableRect), duration: 2.0)
+            catLady.zRotation = 0
+            //actionMove = SKAction.moveToX(CGRectGetMinX(playableRect), duration: 2.0)
         }
-        
+        */
+        actionMove = SKAction.moveTo(zombie.position, duration: 2.0)
         addChild(enemy)
+        // adjusting catLady facing direction
+        let offset = zombie.position - catLady.position
+        let direction = offset.normalized()
+        // Put asset facing 0-degree prior to any angle operations, because assets'
+        // default zRotation is 0 in SK. Its facing direction has to be in line with
+        // its zRotation.
+        // "catLady.zRotation + π" is because catLady is facing π-degree in 
+        // picture(e.g. zombie is facing 0-degree in picture)
+        let shortestAngle = shortestAngleBetween(catLady.zRotation + π, angle2: direction.angle)
+        catLady.zRotation = shortestAngle
+
         addChild(catLady)
         
         enemy.runAction(SKAction.sequence([
             SKAction.group([
-                SKAction.scaleTo(4.0, duration: 2.0),
+                SKAction.sequence([
+                    SKAction.scaleTo(4.0, duration: 1.0),
+                    SKAction.scaleTo(1.0, duration: 1.0)]),
                 SKAction.rotateByAngle(π * 4, duration: 2.0),
                 actionMove]),
             SKAction.removeFromParent()]))

@@ -145,6 +145,5 @@ func randomOnRectCircumference(rect: CGRect) -> (side: Int, point: CGPoint) {
         assert(false)
         
     }
-    print("random point: \(point)")
     return (side, point)
 }
